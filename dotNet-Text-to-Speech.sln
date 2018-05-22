@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2037
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotNet-Text-to-Speech", "dotNet-Text-to-Speech\dotNet-Text-to-Speech.csproj", "{C098E48E-F873-4947-8F03-46E989742F47}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C098E48E-F873-4947-8F03-46E989742F47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C098E48E-F873-4947-8F03-46E989742F47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C098E48E-F873-4947-8F03-46E989742F47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C098E48E-F873-4947-8F03-46E989742F47}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {78E45745-3D06-484B-A844-ED52DED9D251}
+	EndGlobalSection
+EndGlobal
