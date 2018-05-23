@@ -5,8 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:dotNet_Text_to_Speech"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Microsoft Cognitive Services Text-to-Speech Sample for .NET" Height="450" Width="800">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="318*"/>
+            <ColumnDefinition Width="475*"/>
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="txtInput" HorizontalAlignment="Left" Height="22" Margin="10,21,0,0" TextWrapping="Wrap" Text="This is a test of the Microsoft Azure text-to-speech service, highlighting the higher quality of the voices available." VerticalAlignment="Top" Width="774" Grid.ColumnSpan="2"/>
+        <Button Content="Speak" HorizontalAlignment="Left" Margin="10,91,0,0" VerticalAlignment="Top" Width="127" Click="Button_Click"/>
+        <ComboBox x:Name="cboVoices" HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" Width="433" Grid.ColumnSpan="2"/>
+
     </Grid>
 </Window>
