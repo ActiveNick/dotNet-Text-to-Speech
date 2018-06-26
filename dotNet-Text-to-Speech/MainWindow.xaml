@@ -5,12 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:dotNet_Text_to_Speech"
         mc:Ignorable="d"
-        Title="Microsoft Cognitive Services Text-to-Speech Sample for .NET" Height="450" Width="800">
+        Title="Microsoft Cognitive Services Text-to-Speech Sample for .NET" Height="450" Width="800" MinWidth="800" MinHeight="450">
     <Grid>
-
         <StackPanel>
-            <TextBox x:Name="txtInput" HorizontalAlignment="Left" Height="60" Margin="12,12,0,0" TextWrapping="Wrap" Text="This is a test of the Microsoft Azure text-to-speech service, highlighting the higher quality of the voices available." VerticalAlignment="Top" Width="774" Grid.ColumnSpan="2"/>
-            <ComboBox x:Name="cboVoices" HorizontalAlignment="Left" Margin="12,12,0,0" VerticalAlignment="Top" Width="433" Grid.ColumnSpan="2"/>
+            <TextBox x:Name="txtInput" HorizontalAlignment="Stretch" Height="60" Margin="12,12,12,0" TextWrapping="Wrap" Text="This is a test of the Microsoft Azure text-to-speech service, highlighting the higher quality of the voices available." VerticalAlignment="Top" />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Select voice/culture:" Margin="12,14,0,0" VerticalAlignment="Top" />
+                <ComboBox x:Name="cboVoices" HorizontalAlignment="Left" Margin="12,12,0,0" VerticalAlignment="Top" Width="150" />
+                <TextBlock Text="Select voice pitch modifier in Hz (-10 to +10):" Margin="24,14,0,0" VerticalAlignment="Top" />
+                <TextBox x:Name="txtPitch" Text="0" TextAlignment="Center" HorizontalAlignment="Left" Height="22" Width="50" Margin="12,12,0,0"/>
+            </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <CheckBox x:Name="chkIsSavingEnabled" Content="Save audio clip?  |  Specify file name:" Margin="12,15,0,0" />
                 <TextBox x:Name="txtSavefile" Text="synthesizedaudio.wav" TextAlignment="Center" HorizontalAlignment="Left" Height="22" Width="200" Margin="12,12,0,0"/>

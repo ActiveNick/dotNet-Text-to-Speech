@@ -272,6 +272,46 @@ namespace CognitiveServicesTTS
     }
 
     /// <summary>
+    /// List of all voices currently implemented in this sample. This may not include all the
+    /// voices supported by the Cognitive Services Text-to-Speech API. Please visit the following
+    /// link to get the most up-to-date list of supported languages:
+    /// https://docs.microsoft.com/en-us/azure/cognitive-services/speech/api-reference-rest/bingvoiceoutput
+    /// Don't forget to edit ConvertVoiceNametoString() below if you add more values to this enum.
+    /// </summary>
+    public enum VoiceName
+    {
+        enAUCatherine,
+        enAUHayleyRUS,
+        enCALinda,
+        enCAHeatherRUS,
+        enGBSusanApollo,
+        enGBHazelRUS,
+        enGBGeorgeApollo,
+        enIESean,
+        enINHeeraApollo,
+        enINPriyaRUS,
+        enINRaviApollo,
+        enUSZiraRUS,
+        enUSJessaRUS,
+        enUSBenjaminRUS,
+        deATMichael,
+        deCHKarsten,
+        deDEHedda,
+        deDEHeddaRUS,
+        deDEStefanApollo,
+        esESLauraApollo,
+        esESHelenaRUS,
+        esESPabloApollo,
+        esMXHildaRUS,
+        esMXRaulApollo,
+        frCACaroline,
+        frCAHarmonieRUS,
+        frCHGuillaume,
+        frFRJulieApollo,
+        frFRHortenseRUS
+    }
+
+    /// <summary>
     /// Sample synthesize request
     /// </summary>
     public class Synthesize
@@ -283,18 +323,98 @@ namespace CognitiveServicesTTS
         /// <param name="gender">The gender.</param>
         /// <param name="name">The voice name.</param>
         /// <param name="text">The text input.</param>
-        private string GenerateSsml(string locale, string gender, string name, string text)
+        private string GenerateSsml(string locale, string gender, VoiceName voicename, string text, int pitchdelta)
         {
+            string voice = ConvertVoiceNametoString(voicename);
+
+            XNamespace xmlns = "http://www.w3.org/2001/10/synthesis";
             var ssmlDoc = new XDocument(
-                              new XElement("speak",
+                              new XElement(xmlns + "speak",
                                   new XAttribute("version", "1.0"),
-                                  new XAttribute(XNamespace.Xml + "lang", "en-US"),
+                                  new XAttribute(XNamespace.Xml + "lang", locale), // was locked to "en-US"
                                   new XElement("voice",
                                       new XAttribute(XNamespace.Xml + "lang", locale),
                                       new XAttribute(XNamespace.Xml + "gender", gender),
-                                      new XAttribute("name", name),
-                                      text)));
+                                      new XAttribute("name", voice),
+                                      new XElement("prosody",
+                                            new XAttribute("pitch", pitchdelta.ToString() + "Hz"),
+                                                text))));
+
             return ssmlDoc.ToString();
+        }
+
+        /// <summary>
+        /// Converts a specific VoioceName enum option into its string counterpart as expected
+        /// by the API when building the SSML string that is sent to Cognitive Services.
+        /// Make sure that each option in the enum is included in the switch below.
+        /// </summary>
+        /// <param name="voicename"></param>
+        /// <returns></returns>
+        public string ConvertVoiceNametoString(VoiceName voicename)
+        {
+            switch (voicename)
+            {
+                case VoiceName.enAUCatherine:
+                    return "Microsoft Server Speech Text to Speech Voice (en-AU, Catherine)";
+                case VoiceName.enAUHayleyRUS:
+                    return "Microsoft Server Speech Text to Speech Voice (en-AU, HayleyRUS)";
+                case VoiceName.enCALinda:
+                    return "Microsoft Server Speech Text to Speech Voice (en-CA, Linda)";
+                case VoiceName.enCAHeatherRUS:
+                    return "Microsoft Server Speech Text to Speech Voice (en-CA, HeatherRUS)";
+                case VoiceName.enGBSusanApollo:
+                    return "Microsoft Server Speech Text to Speech Voice (en-GB, Susan, Apollo)";
+                case VoiceName.enGBHazelRUS:
+                    return "Microsoft Server Speech Text to Speech Voice (en-GB, HazelRUS)";
+                case VoiceName.enGBGeorgeApollo:
+                    return "Microsoft Server Speech Text to Speech Voice (en-GB, George, Apollo)";
+                case VoiceName.enIESean:
+                    return "Microsoft Server Speech Text to Speech Voice (en-IE, Sean)";
+                case VoiceName.enINHeeraApollo:
+                    return "Microsoft Server Speech Text to Speech Voice (en-IN, Heera, Apollo)";
+                case VoiceName.enINPriyaRUS:
+                    return "Microsoft Server Speech Text to Speech Voice (en-IN, PriyaRUS)";
+                case VoiceName.enINRaviApollo:
+                    return "Microsoft Server Speech Text to Speech Voice (en-IN, Ravi, Apollo)";
+                case VoiceName.enUSZiraRUS:
+                    return "Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)";
+                case VoiceName.enUSJessaRUS:
+                    return "Microsoft Server Speech Text to Speech Voice (en-US, JessaRUS)";
+                case VoiceName.enUSBenjaminRUS:
+                    return "Microsoft Server Speech Text to Speech Voice (en-US, BenjaminRUS)";
+                case VoiceName.deATMichael:
+                    return "Microsoft Server Speech Text to Speech Voice (de-AT, Michael)";
+                case VoiceName.deCHKarsten:
+                    return "Microsoft Server Speech Text to Speech Voice (de-CH, Karsten)";
+                case VoiceName.deDEHedda:
+                    return "Microsoft Server Speech Text to Speech Voice (de-DE, Hedda)";
+                case VoiceName.deDEHeddaRUS:
+                    return "Microsoft Server Speech Text to Speech Voice (de-DE, HeddaRUS)";
+                case VoiceName.deDEStefanApollo:
+                    return "Microsoft Server Speech Text to Speech Voice (de-DE, Stefan, Apollo)";
+                case VoiceName.esESHelenaRUS:
+                    return "Microsoft Server Speech Text to Speech Voice (es-ES, HelenaRUS)";
+                case VoiceName.esESLauraApollo:
+                    return "Microsoft Server Speech Text to Speech Voice (es-ES, Laura, Apollo)";
+                case VoiceName.esESPabloApollo:
+                    return "Microsoft Server Speech Text to Speech Voice (es-ES, Pablo, Apollo)";
+                case VoiceName.esMXHildaRUS:
+                    return "Microsoft Server Speech Text to Speech Voice (es-MX, HildaRUS)";
+                case VoiceName.esMXRaulApollo:
+                    return "Microsoft Server Speech Text to Speech Voice (es-MX, Raul, Apollo)";
+                case VoiceName.frCACaroline:
+                    return "Microsoft Server Speech Text to Speech Voice (fr-CA, Caroline)";
+                case VoiceName.frCAHarmonieRUS:
+                    return "Microsoft Server Speech Text to Speech Voice (fr-CA, HarmonieRUS)";
+                case VoiceName.frCHGuillaume:
+                    return "Microsoft Server Speech Text to Speech Voice (fr-CH, Guillaume)";
+                case VoiceName.frFRJulieApollo:
+                    return "Microsoft Server Speech Text to Speech Voice (fr-FR, Julie, Apollo)";
+                case VoiceName.frFRHortenseRUS:
+                    return "Microsoft Server Speech Text to Speech Voice (fr-FR, HortenseRUS)";
+                default:
+                    return "Microsoft Server Speech Text to Speech Voice (en-US, JessaRUS)";
+            }
         }
 
         private HttpClient client;
@@ -352,47 +472,9 @@ namespace CognitiveServicesTTS
                     break;
             }
 
-            //var request = new HttpRequestMessage(HttpMethod.Post, inputOptions.RequestUri)
-            //{
-            //    Content = new StringContent(GenerateSsml(inputOptions.Locale, genderValue, inputOptions.VoiceName, inputOptions.Text))
-            //};
-
-            //var httpTask = client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
-            //Console.WriteLine("Response status code: [{0}]", httpTask.Result.StatusCode);
-
-            //var saveTask = httpTask.ContinueWith(
-            //    async (responseMessage, token) =>
-            //    {
-            //        try
-            //        {
-            //            if (responseMessage.IsCompleted && responseMessage.Result != null && responseMessage.Result.IsSuccessStatusCode)
-            //            {
-            //                var httpStream = await responseMessage.Result.Content.ReadAsStreamAsync().ConfigureAwait(false);
-            //                this.AudioAvailable(new GenericEventArgs<Stream>(httpStream));
-            //            }
-            //            else
-            //            {
-            //                this.Error(new GenericEventArgs<Exception>(new Exception(String.Format("Service returned {0}", responseMessage.Result.StatusCode))));
-            //            }
-            //        }
-            //        catch (Exception e)
-            //        {
-            //            this.Error(new GenericEventArgs<Exception>(e.GetBaseException()));
-            //        }
-            //        finally
-            //        {
-            //            responseMessage.Dispose();
-            //            request.Dispose();
-            //        }
-            //    },
-            //    TaskContinuationOptions.AttachedToParent,
-            //    cancellationToken);
-
-            //return saveTask;
-
             var request = new HttpRequestMessage(HttpMethod.Post, inputOptions.RequestUri)
             {
-                Content = new StringContent(GenerateSsml(inputOptions.Locale, genderValue, inputOptions.VoiceName, inputOptions.Text))
+                Content = new StringContent(GenerateSsml(inputOptions.Locale, genderValue, inputOptions.VoiceName, inputOptions.Text, inputOptions.PitchDelta))
             };
 
             var httpMsg = await client.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken);
@@ -428,6 +510,11 @@ namespace CognitiveServicesTTS
             }
         }
 
+        public string GetVoiceLocale(VoiceName voicename)
+        {
+            return ConvertVoiceNametoString(voicename).Substring(46, 5);
+        }
+
         /// <summary>
         /// Inputs Options for the TTS Service.
         /// </summary>
@@ -439,9 +526,10 @@ namespace CognitiveServicesTTS
             public InputOptions()
             {
                 this.Locale = "en-us";
-                this.VoiceName = "Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)";
+                this.VoiceName = VoiceName.enUSJessaRUS;
                 // Default to Riff16Khz16BitMonoPcm output format.
                 this.OutputFormat = AudioOutputFormat.Riff16Khz16BitMonoPcm;
+                this.PitchDelta = 0;
             }
 
             /// <summary>
@@ -566,7 +654,12 @@ namespace CognitiveServicesTTS
             /// <summary>
             /// Gets or sets the name of the voice.
             /// </summary>
-            public string VoiceName { get; set; }
+            public VoiceName VoiceName { get; set; }
+
+            /// <summary>
+            /// Gets or sets the pitch delta/modifier in Hz (plus/minus)
+            /// </summary>
+            public int PitchDelta { get; set; }
 
             /// <summary>
             /// Authorization Token.

@@ -31,25 +31,12 @@ namespace dotNet_Text_to_Speech
         {
             InitializeComponent();
 
-            cboVoices.Items.Add("Microsoft Server Speech Text to Speech Voice (en-US, Jessa24KRUS)");
-            cboVoices.Items.Add("Microsoft Server Speech Text to Speech Voice (en-US, Guy24KRUS)");
-            cboVoices.Items.Add("Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)");
-            cboVoices.Items.Add("Microsoft Server Speech Text to Speech Voice (en-US, BenjaminRUS)");
-            cboVoices.Items.Add("Microsoft Server Speech Text to Speech Voice (en-AU, Catherine)");
-            cboVoices.Items.Add("Microsoft Server Speech Text to Speech Voice (en-AU, HayleyRUS)");
-            cboVoices.Items.Add("Microsoft Server Speech Text to Speech Voice (en-CA, Linda)");
-            cboVoices.Items.Add("Microsoft Server Speech Text to Speech Voice (en-CA, HeatherRUS)");
-            cboVoices.Items.Add("Microsoft Server Speech Text to Speech Voice (en-GB, Susan, Apollo)");
-            cboVoices.Items.Add("Microsoft Server Speech Text to Speech Voice (en-GB, HazelRUS)");
-            cboVoices.Items.Add("Microsoft Server Speech Text to Speech Voice (en-GB, George, Apollo)");
-            cboVoices.Items.Add("Microsoft Server Speech Text to Speech Voice (en-IE, Sean)");
-            cboVoices.Items.Add("Microsoft Server Speech Text to Speech Voice (en-IN, Heera, Apollo)");
-            cboVoices.Items.Add("Microsoft Server Speech Text to Speech Voice (en-IN, PriyaRUS)");
-            cboVoices.Items.Add("Microsoft Server Speech Text to Speech Voice (en-IN, Ravi, Apollo)");
-            cboVoices.Items.Add("Microsoft Server Speech Text to Speech Voice (fr-FR, Julie, Apollo)");
-            cboVoices.Items.Add("Microsoft Server Speech Text to Speech Voice (fr-FR, HortenseRUS)");
-            cboVoices.Items.Add("Microsoft Server Speech Text to Speech Voice (fr-FR, Paul, Apollo)");
-            cboVoices.SelectedIndex = 0;
+            // Add all the voices in the enum to the droplist in the UI
+            foreach (VoiceName voice in Enum.GetValues(typeof(VoiceName)))
+            {
+                cboVoices.Items.Add(voice);
+            }
+            cboVoices.SelectedIndex = (int)VoiceName.enUSJessaRUS;
 
             // FOR MORE INFO ON AUTHENTICATION AND HOW TO GET YOUR API KEY, PLEASE VISIT
             // https://docs.microsoft.com/en-us/azure/cognitive-services/speech/how-to/how-to-authentication
@@ -70,41 +57,6 @@ namespace dotNet_Text_to_Speech
                 return;
             }
         }
-
-        /// <summary>
-        /// This method is called once the audio returned from the service.
-        /// It will then attempt to play that audio file.
-        /// Note that the playback will fail if the output audio format is not pcm encoded.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="args">The <see cref="GenericEventArgs{Stream}"/> instance containing the event data.</param>
-        //private void PlayAudio(object sender, GenericEventArgs<Stream> args)
-        //{
-        //    Console.WriteLine(args.EventData);
-
-        //    Application.Current.Dispatcher.Invoke(new Action(() => {
-        //        if ((bool)chkIsSavingEnabled.IsChecked)
-        //        {
-        //            bool fileExists = false;
-        //            string filename = txtSavefile.Text;
-        //            string path = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, filename);
-        //            fileExists = File.Exists(path);
-        //            Debug.WriteLine("Saving audio clip to file:" + path);
-
-        //            FileStream fs = new FileStream(path, FileMode.OpenOrCreate);
-        //            MemoryStream ms = (MemoryStream)args.EventData;
-        //            ms.WriteTo(fs);
-        //            fs.Dispose();
-        //            ms.Dispose();
-        //        }
-        //    }));
-
-        //    // For SoundPlayer to be able to play the wav file, it has to be encoded in PCM.
-        //    // Use output audio format AudioOutputFormat.Riff16Khz16BitMonoPcm to do that.
-        //    SoundPlayer player = new SoundPlayer(args.EventData);
-        //    player.PlaySync();
-        //    args.EventData.Dispose();
-        //}
 
         /// <summary>
         /// Handler an error when a TTS request failed.
@@ -135,11 +87,12 @@ namespace dotNet_Text_to_Speech
                 // Text to be spoken.
                 Text = txtInput.Text,
                 VoiceType = Gender.Female,
+                PitchDelta = int.Parse(txtPitch.Text),
                 // Refer to the documentation for complete list of supported locales.
                 Locale = "en-US",
                 // You can also customize the output voice. Refer to the documentation to view the different
                 // voices that the TTS service can output.
-                VoiceName = cboVoices.Text,
+                VoiceName = (VoiceName)cboVoices.SelectedItem,
 
                 // Service can return audio in different output format.
                 OutputFormat = AudioOutputFormat.Riff24Khz16BitMonoPcm,
