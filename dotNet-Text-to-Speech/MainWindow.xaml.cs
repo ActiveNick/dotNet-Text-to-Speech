@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CognitiveServicesTTS;
+using System.Diagnostics;
 
 namespace dotNet_Text_to_Speech
 {
@@ -52,8 +53,9 @@ namespace dotNet_Text_to_Speech
 
             // FOR MORE INFO ON AUTHENTICATION AND HOW TO GET YOUR API KEY, PLEASE VISIT
             // https://docs.microsoft.com/en-us/azure/cognitive-services/speech/how-to/how-to-authentication
-            Authentication auth = new Authentication("https://api.cognitive.microsoft.com/sts/v1.0/issueToken", 
-                                                     "INSERT-YOUR-BING-SPEECH-API-KEY-HERE");
+            Authentication auth = new Authentication("https://api.cognitive.microsoft.com/sts/v1.0/issueToken",
+                                                     "4d5a1beefe364f8986d63a877ebd51d5");
+            // INSERT-YOUR-BING-SPEECH-API-KEY-HERE
 
             try
             {
@@ -76,16 +78,33 @@ namespace dotNet_Text_to_Speech
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="args">The <see cref="GenericEventArgs{Stream}"/> instance containing the event data.</param>
-        private static void PlayAudio(object sender, GenericEventArgs<Stream> args)
-        {
-            Console.WriteLine(args.EventData);
+        //private void PlayAudio(object sender, GenericEventArgs<Stream> args)
+        //{
+        //    Console.WriteLine(args.EventData);
 
-            // For SoundPlayer to be able to play the wav file, it has to be encoded in PCM.
-            // Use output audio format AudioOutputFormat.Riff16Khz16BitMonoPcm to do that.
-            SoundPlayer player = new SoundPlayer(args.EventData);
-            player.PlaySync();
-            args.EventData.Dispose();
-        }
+        //    Application.Current.Dispatcher.Invoke(new Action(() => {
+        //        if ((bool)chkIsSavingEnabled.IsChecked)
+        //        {
+        //            bool fileExists = false;
+        //            string filename = txtSavefile.Text;
+        //            string path = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, filename);
+        //            fileExists = File.Exists(path);
+        //            Debug.WriteLine("Saving audio clip to file:" + path);
+
+        //            FileStream fs = new FileStream(path, FileMode.OpenOrCreate);
+        //            MemoryStream ms = (MemoryStream)args.EventData;
+        //            ms.WriteTo(fs);
+        //            fs.Dispose();
+        //            ms.Dispose();
+        //        }
+        //    }));
+
+        //    // For SoundPlayer to be able to play the wav file, it has to be encoded in PCM.
+        //    // Use output audio format AudioOutputFormat.Riff16Khz16BitMonoPcm to do that.
+        //    SoundPlayer player = new SoundPlayer(args.EventData);
+        //    player.PlaySync();
+        //    args.EventData.Dispose();
+        //}
 
         /// <summary>
         /// Handler an error when a TTS request failed.
@@ -97,7 +116,7 @@ namespace dotNet_Text_to_Speech
             Console.WriteLine("Unable to complete the TTS request: [{0}]", e.ToString());
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void btnSpeak_Click(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("Starting TTSSample request code execution.");
             // Synthesis endpoint for old Bing Speech API: https://speech.platform.bing.com/synthesize
@@ -106,11 +125,11 @@ namespace dotNet_Text_to_Speech
             string requestUri = "https://westus.tts.speech.microsoft.com/cognitiveservices/v1";
             var cortana = new Synthesize();
 
-            cortana.OnAudioAvailable += PlayAudio;
+            //cortana.OnAudioAvailable += PlayAudio;
             cortana.OnError += ErrorHandler;
 
             // Reuse Synthesize object to minimize latency
-            cortana.Speak(CancellationToken.None, new Synthesize.InputOptions()
+            Stream audiostream = await cortana.Speak(CancellationToken.None, new Synthesize.InputOptions()
             {
                 RequestUri = new Uri(requestUri),
                 // Text to be spoken.
@@ -125,8 +144,32 @@ namespace dotNet_Text_to_Speech
                 // Service can return audio in different output format.
                 OutputFormat = AudioOutputFormat.Riff24Khz16BitMonoPcm,
                 AuthorizationToken = "Bearer " + accessToken,
-            }).Wait();
+            });
 
+            if ((bool)chkIsSavingEnabled.IsChecked)
+            {
+                bool fileExists = false;
+                string filename = txtSavefile.Text;
+                string path = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, filename);
+                fileExists = File.Exists(path);
+                Debug.WriteLine("Saving audio clip to file:" + path);
+
+                FileStream fs = new FileStream(path, FileMode.OpenOrCreate);
+                MemoryStream ms = (MemoryStream)audiostream;
+                ms.WriteTo(fs);
+                fs.Dispose();
+            }
+
+            // For SoundPlayer to be able to play the wav file, it has to be encoded in PCM.
+            // Use output audio format AudioOutputFormat.Riff16Khz16BitMonoPcm to do that.
+            SoundPlayer player = new SoundPlayer(audiostream);
+            player.PlaySync();
+            audiostream.Dispose();
+        }
+
+        private void btnOpenFolder_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("explorer.exe", System.AppDomain.CurrentDomain.BaseDirectory);
         }
     }
 }

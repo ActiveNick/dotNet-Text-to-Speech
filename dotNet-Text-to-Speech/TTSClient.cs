@@ -33,6 +33,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -330,7 +331,7 @@ namespace CognitiveServicesTTS
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A Task</returns>
-        public Task Speak(CancellationToken cancellationToken, InputOptions inputOptions)
+        public async Task<Stream> Speak(CancellationToken cancellationToken, InputOptions inputOptions)
         {
             client.DefaultRequestHeaders.Clear();
             foreach (var header in inputOptions.Headers)
@@ -351,43 +352,55 @@ namespace CognitiveServicesTTS
                     break;
             }
 
+            //var request = new HttpRequestMessage(HttpMethod.Post, inputOptions.RequestUri)
+            //{
+            //    Content = new StringContent(GenerateSsml(inputOptions.Locale, genderValue, inputOptions.VoiceName, inputOptions.Text))
+            //};
+
+            //var httpTask = client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            //Console.WriteLine("Response status code: [{0}]", httpTask.Result.StatusCode);
+
+            //var saveTask = httpTask.ContinueWith(
+            //    async (responseMessage, token) =>
+            //    {
+            //        try
+            //        {
+            //            if (responseMessage.IsCompleted && responseMessage.Result != null && responseMessage.Result.IsSuccessStatusCode)
+            //            {
+            //                var httpStream = await responseMessage.Result.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            //                this.AudioAvailable(new GenericEventArgs<Stream>(httpStream));
+            //            }
+            //            else
+            //            {
+            //                this.Error(new GenericEventArgs<Exception>(new Exception(String.Format("Service returned {0}", responseMessage.Result.StatusCode))));
+            //            }
+            //        }
+            //        catch (Exception e)
+            //        {
+            //            this.Error(new GenericEventArgs<Exception>(e.GetBaseException()));
+            //        }
+            //        finally
+            //        {
+            //            responseMessage.Dispose();
+            //            request.Dispose();
+            //        }
+            //    },
+            //    TaskContinuationOptions.AttachedToParent,
+            //    cancellationToken);
+
+            //return saveTask;
+
             var request = new HttpRequestMessage(HttpMethod.Post, inputOptions.RequestUri)
             {
                 Content = new StringContent(GenerateSsml(inputOptions.Locale, genderValue, inputOptions.VoiceName, inputOptions.Text))
             };
 
-            var httpTask = client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
-            Console.WriteLine("Response status code: [{0}]", httpTask.Result.StatusCode);
+            var httpMsg = await client.SendAsync(request, HttpCompletionOption.ResponseContentRead, cancellationToken);
+            Debug.WriteLine($"Response status code: [{httpMsg.StatusCode}]");
 
-            var saveTask = httpTask.ContinueWith(
-                async (responseMessage, token) =>
-                {
-                    try
-                    {
-                        if (responseMessage.IsCompleted && responseMessage.Result != null && responseMessage.Result.IsSuccessStatusCode)
-                        {
-                            var httpStream = await responseMessage.Result.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                            this.AudioAvailable(new GenericEventArgs<Stream>(httpStream));
-                        }
-                        else
-                        {
-                            this.Error(new GenericEventArgs<Exception>(new Exception(String.Format("Service returned {0}", responseMessage.Result.StatusCode))));
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        this.Error(new GenericEventArgs<Exception>(e.GetBaseException()));
-                    }
-                    finally
-                    {
-                        responseMessage.Dispose();
-                        request.Dispose();
-                    }
-                },
-                TaskContinuationOptions.AttachedToParent,
-                cancellationToken);
+            Stream httpStream = await httpMsg.Content.ReadAsStreamAsync();
 
-            return saveTask;
+            return httpStream;
         }
 
         /// <summary>

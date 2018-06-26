@@ -7,13 +7,18 @@
         mc:Ignorable="d"
         Title="Microsoft Cognitive Services Text-to-Speech Sample for .NET" Height="450" Width="800">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="318*"/>
-            <ColumnDefinition Width="475*"/>
-        </Grid.ColumnDefinitions>
-        <TextBox x:Name="txtInput" HorizontalAlignment="Left" Height="22" Margin="10,21,0,0" TextWrapping="Wrap" Text="This is a test of the Microsoft Azure text-to-speech service, highlighting the higher quality of the voices available." VerticalAlignment="Top" Width="774" Grid.ColumnSpan="2"/>
-        <Button Content="Speak" HorizontalAlignment="Left" Margin="10,91,0,0" VerticalAlignment="Top" Width="127" Click="Button_Click"/>
-        <ComboBox x:Name="cboVoices" HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" Width="433" Grid.ColumnSpan="2"/>
 
+        <StackPanel>
+            <TextBox x:Name="txtInput" HorizontalAlignment="Left" Height="60" Margin="12,12,0,0" TextWrapping="Wrap" Text="This is a test of the Microsoft Azure text-to-speech service, highlighting the higher quality of the voices available." VerticalAlignment="Top" Width="774" Grid.ColumnSpan="2"/>
+            <ComboBox x:Name="cboVoices" HorizontalAlignment="Left" Margin="12,12,0,0" VerticalAlignment="Top" Width="433" Grid.ColumnSpan="2"/>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="chkIsSavingEnabled" Content="Save audio clip?  |  Specify file name:" Margin="12,15,0,0" />
+                <TextBox x:Name="txtSavefile" Text="synthesizedaudio.wav" TextAlignment="Center" HorizontalAlignment="Left" Height="22" Width="200" Margin="12,12,0,0"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="btnSpeak" Content="Speak" HorizontalAlignment="Left" Margin="12,12,0,0" VerticalAlignment="Top" Width="127" Click="btnSpeak_Click"/>
+                <Button x:Name="btnOpenFolder" Content="Open Save Folder" HorizontalAlignment="Left" Margin="12,12,0,0" VerticalAlignment="Top" Width="127" Click="btnOpenFolder_Click"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Window>
