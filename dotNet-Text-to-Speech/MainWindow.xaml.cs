@@ -124,5 +124,16 @@ namespace dotNet_Text_to_Speech
         {
             Process.Start("explorer.exe", System.AppDomain.CurrentDomain.BaseDirectory);
         }
+
+        private void btnClearText_Click(object sender, RoutedEventArgs e)
+        {
+            txtInput.Text = "";
+        }
+
+        private void btnCopyName_Click(object sender, RoutedEventArgs e)
+        {
+            int maxlenght = Math.Min(128, txtInput.Text.Trim().Length);
+            txtSavefile.Text = txtInput.Text.Trim().Substring(0, maxlenght) + ".wav";
+        }
     }
 }

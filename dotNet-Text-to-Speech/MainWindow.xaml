@@ -13,11 +13,13 @@
                 <TextBlock Text="Select voice/culture:" Margin="12,14,0,0" VerticalAlignment="Top" />
                 <ComboBox x:Name="cboVoices" HorizontalAlignment="Left" Margin="12,12,0,0" VerticalAlignment="Top" Width="150" />
                 <TextBlock Text="Select voice pitch modifier in Hz (-10 to +10):" Margin="24,14,0,0" VerticalAlignment="Top" />
-                <TextBox x:Name="txtPitch" Text="0" TextAlignment="Center" HorizontalAlignment="Left" Height="22" Width="50" Margin="12,12,0,0"/>
+                <TextBox x:Name="txtPitch" Text="0" TextAlignment="Center" HorizontalAlignment="Left" Height="22" Width="50" Margin="12,12,12,0"/>
+                <Button x:Name="btnClearText" Content="Clear Text" HorizontalAlignment="Left" Margin="12,12,0,0" VerticalAlignment="Top" Width="127" Click="btnClearText_Click"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <CheckBox x:Name="chkIsSavingEnabled" Content="Save audio clip?  |  Specify file name:" Margin="12,15,0,0" />
-                <TextBox x:Name="txtSavefile" Text="synthesizedaudio.wav" TextAlignment="Center" HorizontalAlignment="Left" Height="22" Width="200" Margin="12,12,0,0"/>
+                <TextBox x:Name="txtSavefile" Text="synthesizedaudio.wav" TextAlignment="Center" HorizontalAlignment="Left" Height="22" Width="300" Margin="12,12,0,0"/>
+                <Button x:Name="btnCopyName" Content="Copy Text to File Name" HorizontalAlignment="Left" Margin="12,12,0,0" VerticalAlignment="Top" Width="172" Click="btnCopyName_Click"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Button x:Name="btnSpeak" Content="Speak" HorizontalAlignment="Left" Margin="12,12,0,0" VerticalAlignment="Top" Width="127" Click="btnSpeak_Click"/>
